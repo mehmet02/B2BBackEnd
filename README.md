@@ -1,1 +1,2 @@
-# B2BBackEnd DatabaseFirst
+B2BBackEnd Asp.Net Core 6 API
+- 🔭 I’m currently working on ...
