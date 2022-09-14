@@ -13,8 +13,10 @@ namespace Business.Repositories.ProductImageRepository
     {
         Task<IResult> Add(ProductImageAddDto productImageAddDto);
         Task<IResult> Update(ProductImageUpdateDto productImageUpdateDto);
+        Task<IResult> SetMainImage(int id);
         Task<IResult> Delete(ProductImage productImage);
         Task<IDataResult<List<ProductImage>>> GetList();
+        Task<List<ProductImage>> GetListByProductId(int productid);
         Task<IDataResult<ProductImage>> GetById(int id);
     }
 }

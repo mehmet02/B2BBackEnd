@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Business.Repositories.ProductRepository;
 using Entities.Concrete;
 using Business.Aspects.Secured;
+using Business.Repositories.PriceListDetailRepository;
+using Business.Repositories.ProductImageRepository;
 using Core.Aspects.Validation;
 using Core.Aspects.Caching;
 using Core.Aspects.Performance;
@@ -21,12 +23,15 @@ namespace Business.Repositories.ProductRepository
     public class ProductManager : IProductService
     {
         private readonly IProductDal _productDal;
-
-        public ProductManager(IProductDal productDal)
+        private readonly IProductImageService _productImageService;
+        private readonly IPriceListDetailService _priceListDetailService;
+        public ProductManager(IProductDal productDal, IProductImageService productImageService, IPriceListDetailService priceListDetailService)
         {
             _productDal = productDal;
+            _productImageService = productImageService;
+            _priceListDetailService = priceListDetailService;
         }
-
+        
         //[SecuredAspect("admin,product.add")]
         [ValidationAspect(typeof(ProductValidator))]
         [RemoveCacheAspect("IProductService.Get")]
@@ -47,11 +52,21 @@ namespace Business.Repositories.ProductRepository
             return new SuccessResult(ProductMessages.Updated);
         }
 
-        [SecuredAspect("admin,product.delete")]
+        //[SecuredAspect("admin,product.delete")]
         [RemoveCacheAspect("IProductService.Get")]
 
         public async Task<IResult> Delete(Product product)
         {
+            var images = await _productImageService.GetListByProductId(product.Id);
+            foreach (var image in images)
+            {
+                await _productImageService.Delete(image);
+            }
+            var priceListProducts=await _priceListDetailService.GetListByProductId(product.Id);
+            foreach (var item in priceListProducts)
+            {
+                await _priceListDetailService.Delete(item);
+            }
             await _productDal.Delete(product);
             return new SuccessResult(ProductMessages.Deleted);
         }

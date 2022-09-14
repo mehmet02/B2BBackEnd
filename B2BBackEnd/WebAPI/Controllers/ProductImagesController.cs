@@ -70,6 +70,15 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> SetMainImage(int id)
+        {
+            var result = await _productImageService.SetMainImage(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
     }
 }

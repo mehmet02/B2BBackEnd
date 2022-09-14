@@ -58,7 +58,16 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
+        [HttpGet("[action]/{customerid}")]
+        public async Task<IActionResult> GetListByCustomerId(int customerid)
+        {
+            var result = await _basketService.GetListByCustomerId(customerid);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
