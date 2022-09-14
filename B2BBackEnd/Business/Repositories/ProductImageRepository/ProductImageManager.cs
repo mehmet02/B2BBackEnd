@@ -37,20 +37,27 @@ namespace Business.Repositories.ProductImageRepository
 
         public async Task<IResult> Add(ProductImageAddDto productImageAddDto)
         {
-            IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(productImageAddDto.Image.FileName), CheckIfImageSizeIsLessThanOneMb(productImageAddDto.Image.Length));
+            foreach (var image in productImageAddDto.Images)
+            {
+                IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(image.FileName), CheckIfImageSizeIsLessThanOneMb(image.Length));
 
-            if (result != null)
-            {
-                return result;
+                if (result == null)
+                {
+                    string fileName = _fileService.FileSaveToServer(image, "./Content/img/");
+                    ProductImage productImage = new()
+                    {
+                        Id = 0,
+                        ImageUrl = fileName,
+                        ProductId = productImageAddDto.ProductId,
+                        IsMainImage = false
+                    };
+                    await _productImageDal.Add(productImage);
+                }
+
             }
-            string fileName = _fileService.FileSaveToServer(productImageAddDto.Image, "./Content/img");
-            ProductImage productImage = new()
-            {
-                Id = 0,
-                ImageUrl = fileName,
-                ProductId = productImageAddDto.ProductId
-            };
-            await _productImageDal.Add(productImage);
+
+
+
             return new SuccessResult(ProductImageMessages.Added);
         }
 
@@ -58,8 +65,36 @@ namespace Business.Repositories.ProductImageRepository
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
 
-        public async Task<IResult> Update(ProductImage productImage)
+        public async Task<IResult> Update(ProductImageUpdateDto productImageUpdateDto)
         {
+            IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(productImageUpdateDto.Image.FileName), CheckIfImageSizeIsLessThanOneMb(productImageUpdateDto.Image.Length));
+
+            if (result != null)
+            {
+                return result;
+            }
+            
+
+
+            try
+            {
+                if (File.Exists(@"./Content/img/" + productImageUpdateDto.ImageUrl))
+                {
+                    File.Delete(@"./Content/img/" + productImageUpdateDto.ImageUrl);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            string fileName = _fileService.FileSaveToServer(productImageUpdateDto.Image, "./Content/img/");
+            ProductImage productImage = new()
+            {
+                Id = productImageUpdateDto.Id,
+                ImageUrl = fileName,
+                ProductId = productImageUpdateDto.ProductId,
+                IsMainImage = productImageUpdateDto.IsMainImage
+            };
             await _productImageDal.Update(productImage);
             return new SuccessResult(ProductImageMessages.Updated);
         }
@@ -73,7 +108,7 @@ namespace Business.Repositories.ProductImageRepository
             return new SuccessResult(ProductImageMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<ProductImage>>> GetList()

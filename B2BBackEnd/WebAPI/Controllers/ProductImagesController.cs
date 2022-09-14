@@ -28,9 +28,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Update(ProductImage productImage)
+        public async Task<IActionResult> Update([FromForm] ProductImageUpdateDto productImageUpdateDto)
         {
-            var result = await _productImageService.Update(productImage);
+            var result = await _productImageService.Update(productImageUpdateDto);
             if (result.Success)
             {
                 return Ok(result);
