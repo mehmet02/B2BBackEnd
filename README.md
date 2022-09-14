@@ -1,1 +1,2 @@
-https://github-readme-stats.vercel.app/api?username=mehmet02&show_icons=true
+B2BBackEnd Asp.Net Core 6
+- 🔭 I’m currently working on ...
