@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Business.Repositories.ProductRepository;
 using Entities.Concrete;
 using Business.Aspects.Secured;
+using Business.Repositories.BasketRepository;
+using Business.Repositories.OrderDetailRepository;
 using Business.Repositories.PriceListDetailRepository;
 using Business.Repositories.ProductImageRepository;
 using Core.Aspects.Validation;
@@ -13,6 +15,7 @@ using Core.Aspects.Caching;
 using Core.Aspects.Performance;
 using Business.Repositories.ProductRepository.Validation;
 using Business.Repositories.ProductRepository.Constants;
+using Core.Utilities.Business;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.ProductRepository;
@@ -25,14 +28,19 @@ namespace Business.Repositories.ProductRepository
         private readonly IProductDal _productDal;
         private readonly IProductImageService _productImageService;
         private readonly IPriceListDetailService _priceListDetailService;
-        public ProductManager(IProductDal productDal, IProductImageService productImageService, IPriceListDetailService priceListDetailService)
+        private readonly IBasketService _basketService;
+        private readonly IOrderDetailService _orderDetailService;
+        public ProductManager(IProductDal productDal, IProductImageService productImageService, IPriceListDetailService priceListDetailService, IBasketService basketService, IOrderDetailService orderDetailService)
         {
             _productDal = productDal;
             _productImageService = productImageService;
             _priceListDetailService = priceListDetailService;
+            _basketService = basketService;
+            _orderDetailService = orderDetailService;
         }
-        
         //[SecuredAspect("admin,product.add")]
+
+
         [ValidationAspect(typeof(ProductValidator))]
         [RemoveCacheAspect("IProductService.Get")]
 
@@ -57,12 +65,18 @@ namespace Business.Repositories.ProductRepository
 
         public async Task<IResult> Delete(Product product)
         {
+            IResult result = BusinessRules.Run(await CheckIfProductExistToBaskets(product.Id),await CheckIfProductExistToOrderDetails(product.Id));
+            if (result!=null)
+            {
+                return result;
+            }
+
             var images = await _productImageService.GetListByProductId(product.Id);
             foreach (var image in images)
             {
                 await _productImageService.Delete(image);
             }
-            var priceListProducts=await _priceListDetailService.GetListByProductId(product.Id);
+            var priceListProducts = await _priceListDetailService.GetListByProductId(product.Id);
             foreach (var item in priceListProducts)
             {
                 await _priceListDetailService.Delete(item);
@@ -94,5 +108,25 @@ namespace Business.Repositories.ProductRepository
             return new SuccessDataResult<Product>(await _productDal.Get(p => p.Id == id));
         }
 
+        public async Task<IResult> CheckIfProductExistToBaskets(int productid)
+        {
+            var result = await _basketService.GetListByProductId(productid);
+            if (result.Count()>0)
+            {
+                return new ErrorResult("Silmeye Çalýþtýðýnýz Ürün Sepette Bulunuyor");
+            }
+
+            return new SuccessResult();
+        }
+        public async Task<IResult> CheckIfProductExistToOrderDetails(int productid)
+        {
+            var result = await _orderDetailService.GetListByProductid(productid);
+            if (result.Count()>0)
+            {
+                return new ErrorResult("Silmeye Çalýþtýðýnýz Ürünün Sipariþi Bulunuyor");
+            }
+
+            return new SuccessResult();
+        }
     }
 }

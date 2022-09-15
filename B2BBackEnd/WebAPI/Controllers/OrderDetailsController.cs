@@ -48,10 +48,10 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetList()
+        [HttpGet("[action]/{orderid}")]
+        public async Task<IActionResult> GetList(int orderid)
         {
-            var result = await _orderDetailService.GetList();
+            var result = await _orderDetailService.GetList(orderid);
             if (result.Success)
             {
                 return Ok(result);

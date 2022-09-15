@@ -13,7 +13,8 @@ namespace Business.Repositories.OrderDetailRepository
         Task<IResult> Add(OrderDetail orderDetail);
         Task<IResult> Update(OrderDetail orderDetail);
         Task<IResult> Delete(OrderDetail orderDetail);
-        Task<IDataResult<List<OrderDetail>>> GetList();
+        Task<IDataResult<List<OrderDetail>>> GetList(int orderid);
+        Task<List<OrderDetail>> GetListByProductid(int productid);
         Task<IDataResult<OrderDetail>> GetById(int id);
     }
 }

@@ -26,7 +26,7 @@ namespace Business.Repositories.OrderDetailRepository
             _orderDetailDal = orderDetailDal;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(OrderDetailValidator))]
         [RemoveCacheAspect("IOrderDetailService.Get")]
 
@@ -46,7 +46,7 @@ namespace Business.Repositories.OrderDetailRepository
             return new SuccessResult(OrderDetailMessages.Updated);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("IOrderDetailService.Get")]
 
         public async Task<IResult> Delete(OrderDetail orderDetail)
@@ -55,12 +55,17 @@ namespace Business.Repositories.OrderDetailRepository
             return new SuccessResult(OrderDetailMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
-        public async Task<IDataResult<List<OrderDetail>>> GetList()
+        public async Task<IDataResult<List<OrderDetail>>> GetList(int orderid)
         {
-            return new SuccessDataResult<List<OrderDetail>>(await _orderDetailDal.GetAll());
+            return new SuccessDataResult<List<OrderDetail>>(await _orderDetailDal.GetAll(p=>p.OrderId==orderid));
+        }
+
+        public async Task<List<OrderDetail>> GetListByProductid(int productid)
+        {
+            return await _orderDetailDal.GetAll(p => p.ProductId == productid);
         }
 
         [SecuredAspect()]
