@@ -26,11 +26,11 @@ namespace Business.Authentication
             _customerService = customerService;
         }
 
-        public async Task<IDataResult<Token>> UserLogin(LoginAuthDto loginDto)
+        public async Task<IDataResult<AdminToken>> UserLogin(LoginAuthDto loginDto)
         {
             var user = await _userService.GetByEmail(loginDto.Email);
             if (user == null)
-                return new ErrorDataResult<Token>("Kullanıcı maili sistemde bulunamadı!");
+                return new ErrorDataResult<AdminToken>("Kullanıcı maili sistemde bulunamadı!");
 
             //if (!user.IsConfirm)
             //    return new ErrorDataResult<Token>("Kullanıcı maili onaylanmamış!");
@@ -40,17 +40,17 @@ namespace Business.Authentication
 
             if (result)
             {
-                Token token = new();
+                AdminToken token = new();
                 token = _tokenHandler.CreateUserToken(user, operationClaims);
-                return new SuccessDataResult<Token>(token);
+                return new SuccessDataResult<AdminToken>(token);
             }
-            return new ErrorDataResult<Token>("Kullanıcı maili ya da şifre bilgisi yanlış");
+            return new ErrorDataResult<AdminToken>("Kullanıcı maili ya da şifre bilgisi yanlış");
         }
-        public async Task<IDataResult<Token>> CustomerLogin(CustomerLoginDto customerLoginDto)
+        public async Task<IDataResult<CustomerToken>> CustomerLogin(CustomerLoginDto customerLoginDto)
         {
             var customer = await _customerService.GetByEmail(customerLoginDto.Email);
             if (customer == null)
-                return new ErrorDataResult<Token>("Kullanıcı maili sistemde bulunamadı!");
+                return new ErrorDataResult<CustomerToken>("Kullanıcı maili sistemde bulunamadı!");
 
             //if (!user.IsConfirm)
             //    return new ErrorDataResult<Token>("Kullanıcı maili onaylanmamış!");
@@ -60,11 +60,11 @@ namespace Business.Authentication
 
             if (result)
             {
-                Token token = new();
+                CustomerToken token = new();
                 token = _tokenHandler.CreateCustomerToken(customer);
-                return new SuccessDataResult<Token>(token);
+                return new SuccessDataResult<CustomerToken>(token);
             }
-            return new ErrorDataResult<Token>("Kullanıcı maili ya da şifre bilgisi yanlış");
+            return new ErrorDataResult<CustomerToken>("Kullanıcı maili ya da şifre bilgisi yanlış");
         }
         [ValidationAspect(typeof(AuthValidator))]
         public async Task<IResult> Register(RegisterAuthDto registerDto)

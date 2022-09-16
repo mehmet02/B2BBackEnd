@@ -17,9 +17,9 @@ namespace Core.Utilities.Security.JWT
         {
             Configuration = configuration;
         }
-        public Token CreateUserToken(User user, List<OperationClaim> operationClaims)
+        public AdminToken CreateUserToken(User user, List<OperationClaim> operationClaims)
         {
-            Token token = new Token();
+            AdminToken token = new AdminToken();
 
             //Security Key'in simetriğini alalım
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:SecurityKey"]));
@@ -42,16 +42,16 @@ namespace Core.Utilities.Security.JWT
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             //Token üretelim
-            token.AccessToken = jwtSecurityTokenHandler.WriteToken(securityToken);
+            token.AdminAccessToken = jwtSecurityTokenHandler.WriteToken(securityToken);
 
             //Refresh token üretelim
             token.RefreshToken = CreateRefreshToken();
             return token;
         }
 
-        public Token CreateCustomerToken(Customer customer)
+        public CustomerToken CreateCustomerToken(Customer customer)
         {
-            Token token = new Token();
+            CustomerToken token = new ();
 
             //Security Key'in simetriğini alalım
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:SecurityKey"]));
@@ -74,7 +74,7 @@ namespace Core.Utilities.Security.JWT
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             //Token üretelim
-            token.AccessToken = jwtSecurityTokenHandler.WriteToken(securityToken);
+            token.CustomerAccessToken = jwtSecurityTokenHandler.WriteToken(securityToken);
 
             //Refresh token üretelim
             token.RefreshToken = CreateRefreshToken();
