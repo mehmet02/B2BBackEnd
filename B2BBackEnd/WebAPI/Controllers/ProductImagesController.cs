@@ -59,7 +59,16 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
+        [HttpGet("[action]/{productid}")]
+        public async Task<IActionResult> GetListByProductId(int productid)
+        {
+            var result = await _productImageService.GetListByProductId(productid);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
