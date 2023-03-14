@@ -12,18 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
-
+//tttt
 // Add services to the container.
+
 builder.Services.AddControllers();
 
-//Site bazlý izin bermek istiyorsak bura kullanýlmalý
+//Site bazlï¿½ izin bermek istiyorsak bura kullanï¿½lmalï¿½
 //builder.Services.AddCors(options =>
 //{
 //    options.AddPolicy("AllowOrigin",
 //        builder => builder.WithOrigins("https://localhost:4200", "yeni site", "yeni 2"));
 //});
 
-//Eðer tüm istekleri karþýlamak istiyorsak
+//Eï¿½er tï¿½m istekleri karï¿½ï¿½lamak istiyorsak
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
