@@ -16,5 +16,9 @@ namespace Business.Repositories.OrderRepository
         Task<IResult> Delete(Order order);
         Task<IDataResult<List<Order>>> GetList();
         Task<IDataResult<Order>> GetById(int id);
+        Task<IDataResult<List<OrderDto>>> GetListDto();
+        Task<IDataResult<List<OrderDto>>> GetListByCustomerIdDto(int customerId);
+        Task<IDataResult<List<Order>>> GetListByCustomerId(int customerId);
+        Task<IDataResult<OrderDto>> GetByIdDto(int id);
     }
 }

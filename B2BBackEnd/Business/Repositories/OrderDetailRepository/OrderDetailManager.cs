@@ -14,6 +14,7 @@ using Business.Repositories.OrderDetailRepository.Constants;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.OrderDetailRepository;
+using Entities.Dtos;
 
 namespace Business.Repositories.OrderDetailRepository
 {
@@ -62,7 +63,13 @@ namespace Business.Repositories.OrderDetailRepository
         {
             return new SuccessDataResult<List<OrderDetail>>(await _orderDetailDal.GetAll(p=>p.OrderId==orderid));
         }
-
+        [SecuredAspect()]
+        [CacheAspect()]
+        [PerformanceAspect()]
+        public async Task<IDataResult<List<OrderDetailDto>>> GetListDto(int orderId)
+        {
+            return new SuccessDataResult<List<OrderDetailDto>>(await _orderDetailDal.GetListDto(orderId));
+        }
         public async Task<List<OrderDetail>> GetListByProductid(int productid)
         {
             return await _orderDetailDal.GetAll(p => p.ProductId == productid);

@@ -44,8 +44,8 @@ namespace Business.Repositories.ProductImageRepository
 
                 if (result == null)
                 {
-                    //string fileName = _fileService.FileSaveToServer(image, "./Content/img/");
-                    string fileName = _fileService.FileSaveToServer(image, @"C:\Projects\AspNetCore\B2B\B2BFrontEnd\src\assets\img\");
+                    string fileName = _fileService.FileSaveToServer(image, "./Content/img/");
+                    //string fileName = _fileService.FileSaveToServer(image, @"C:\Projects\AspNetCore\B2B\B2BFrontEnd\src\assets\img\");
                     ProductImage productImage = new()
                     {
                         Id = 0,
@@ -144,7 +144,7 @@ namespace Business.Repositories.ProductImageRepository
             decimal imgMbSize = Convert.ToDecimal(imgSize * 0.000001);
             if (imgMbSize > 1)
             {
-                return new ErrorResult("Yüklediðiniz resmi boyutu en fazla 1mb olmalýdýr");
+                return new ErrorResult("Yï¿½klediï¿½iniz resmi boyutu en fazla 1mb olmalï¿½dï¿½r");
             }
             return new SuccessResult();
         }
@@ -156,7 +156,7 @@ namespace Business.Repositories.ProductImageRepository
             List<string> AllowFileExtensions = new List<string> { ".jpg", ".jpeg", ".gif", ".png" };
             if (!AllowFileExtensions.Contains(extension))
             {
-                return new ErrorResult("Eklediðiniz resim .jpg, .jpeg, .gif, .png türlerinden biri olmalýdýr!");
+                return new ErrorResult("Eklediï¿½iniz resim .jpg, .jpeg, .gif, .png tï¿½rlerinden biri olmalï¿½dï¿½r!");
             }
             return new SuccessResult();
         }

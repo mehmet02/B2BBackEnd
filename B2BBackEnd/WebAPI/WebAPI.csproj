@@ -24,4 +24,8 @@
     <Folder Include="Content\img\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Upload\949cddac-9b2b-4ae4-909a-cce0e3e0cdd6.jpg" />
+  </ItemGroup>
+
 </Project>

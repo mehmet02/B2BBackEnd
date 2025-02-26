@@ -7,7 +7,8 @@ namespace DataAccess.Context.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=EXCALIBUR;Database=B2BDb;Integrated Security=true;");
+            optionsBuilder.UseSqlServer("Server=147.93.89.85;Database=B2BDb;User Id=sa;Password=Mecesoft0202+-*;");
+            //optionsBuilder.UseSqlServer("Server=EXCALIBUR;Database=B2BDb;Integrated Security=true;");
         }
 
         public DbSet<User> Users { get; set; }

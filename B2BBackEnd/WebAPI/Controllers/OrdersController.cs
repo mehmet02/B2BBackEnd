@@ -16,7 +16,7 @@ namespace WebApi.Controllers
             _orderService = orderService;
         }
 
-        [HttpPost("[action]")]
+        [HttpGet("[action]/{customerid}")]
         public async Task<IActionResult> Add(int customerid)
         {
             var result = await _orderService.Add(customerid);
@@ -59,7 +59,27 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetListDto()
+        {
+            var result = await _orderService.GetListDto();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
 
+        [HttpGet("[action]/{customerId}")]
+        public async Task<IActionResult> GetListByCustomerIdDto(int customerId)
+        {
+            var result = await _orderService.GetListByCustomerIdDto(customerId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -70,6 +90,15 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetByIdDto(int id)
+        {
+            var result = await _orderService.GetByIdDto(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
     }
 }

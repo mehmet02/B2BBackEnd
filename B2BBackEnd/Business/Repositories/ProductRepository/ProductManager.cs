@@ -88,7 +88,7 @@ namespace Business.Repositories.ProductRepository
         {
             return new SuccessDataResult<List<ProductListDto>>(await _productDal.GetList());
         }
-        [SecuredAspect("admin,product.get")]
+        //[SecuredAspect("admin,product.get")]
         [PerformanceAspect()]
         [RemoveCacheAspect("IProductService.Get")]
         public async Task<IDataResult<List<ProductListDto>>> GetProductList(int customerid)
@@ -109,7 +109,7 @@ namespace Business.Repositories.ProductRepository
             var result = await _basketService.GetListByProductId(productid);
             if (result.Count()>0)
             {
-                return new ErrorResult("Silmeye Çalýþtýðýnýz Ürün Sepette Bulunuyor");
+                return new ErrorResult("Silmeye ï¿½alï¿½ï¿½tï¿½ï¿½ï¿½nï¿½z ï¿½rï¿½n Sepette Bulunuyor");
             }
 
             return new SuccessResult();
@@ -119,7 +119,7 @@ namespace Business.Repositories.ProductRepository
             var result = await _orderDetailService.GetListByProductid(productid);
             if (result.Count()>0)
             {
-                return new ErrorResult("Silmeye Çalýþtýðýnýz Ürünün Sipariþi Bulunuyor");
+                return new ErrorResult("Silmeye ï¿½alï¿½ï¿½tï¿½ï¿½ï¿½nï¿½z ï¿½rï¿½nï¿½n Sipariï¿½i Bulunuyor");
             }
 
             return new SuccessResult();
